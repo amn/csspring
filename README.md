@@ -71,7 +71,7 @@ Parsing is offered only in the form of Python modules — no "command-line" prog
 
 ### Why?
 
-We wanted a "transparent" CSS parser — one that one could be used in different configurations without it imposing limitations that would strictly speaking go beyond parsing. Put differently, we wanted a parser that does not assume any particular application, a software _library_ in the classical sense of the term, or a true _API_ if you will.
+We wanted a "transparent" CSS parser — one that could be used in different configurations without it imposing limitations that would strictly speaking go beyond parsing. Put differently, we wanted a parser that does not assume any particular application, a software _library_ in the classical sense of the term, or a true _API_ if you will.
 
 For instance, the popular [Less](http://lesscss.org) software seems to rather effortlessly parse CSS [3] text, but it invariably re-arranges white-space in the output, without giving the user any control over the latter. Less is not _transparent_ like that — there is no way to use it with recovery of the originally parsed text from the parse tree — parsing with Less is a one-way street for at least _some_ applications (specifically those that "transform" CSS but need to preserve all of the original input as-is).
 
