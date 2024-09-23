@@ -106,7 +106,7 @@ def _(production: ConcatenationProduction, input: TokenStream) -> Product | None
 @parse.register
 def _(production: NonEmptyProduction, input: TokenStream) -> Product | None:
     """Variant of `parse` for productions of the `!` multiplier variety (see https://drafts.csswg.org/css-values-4/#mult-req)."""
-    result = cast(Product, parse(production.element, input)) # The element of a non-empty production is concatenation, and the `parse` overload for `ConcatenationProduction` never returns a `Token`, only `Product | None`
+    result = cast(Product | None, parse(production.element, input)) # The element of a non-empty production is concatenation, and the `parse` overload for `ConcatenationProduction` never returns a `Token`, only `Product | None`
     if result and any(tokens(result)):
         return result
     else:
