@@ -15,6 +15,22 @@ T = TypeVar('T')
 T_co = TypeVar('T_co', covariant=True)
 T_contra = TypeVar('T_contra', contravariant=True)
 
+def intersperse(*items: T, separator: T) -> Iterable[T]:
+    """Yield items with a separator yielded between each item.
+
+    E.g. `intersperse(("foo", "bar", "baz"), "-")` will yield "foo", "-", "bar", "-", then "baz".
+
+    Owing to a mere design choice, this procedure demands, by the type checker, that the separator be of a type co-variant with the type of items in the sequence, with the latter assumed to be homogenous (items are all of the same type).
+
+    :param items: A sequence (items are assumed to be of the same type or share a super-type)
+    :param separator: A value to yield between yielding each item in the sequence
+    """
+    it = iter(items)
+    yield next(it)
+    for item in it:
+        yield separator
+        yield item
+
 @runtime_checkable
 class Reader(Protocol[T_co]):
     """An interface to readable/readers, to assist type checking for the most part."""
