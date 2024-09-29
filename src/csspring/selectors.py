@@ -50,7 +50,7 @@ def parse_any_value(input: TokenStream) -> Product | None:
     result: list[Token] = []
     count = { type: 0 for type in { OpenBraceToken, OpenBracketToken, OpenParenToken } }
     while True:
-        match token := input.consume_token():
+        match token := input.next_token():
             case BadStringToken() | BadURLToken():
                 break
             case OpenParenToken() | OpenBracketToken() | OpenBraceToken():
@@ -61,6 +61,7 @@ def parse_any_value(input: TokenStream) -> Product | None:
                 count[token.mirror_type] -= 1
             case None:
                 break
+        input.consume_token()
         result.append(token)
     if result:
         return result
