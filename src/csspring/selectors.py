@@ -56,7 +56,7 @@ def parse_any_value(input: TokenStream) -> Product | None:
             case OpenParenToken() | OpenBracketToken() | OpenBraceToken():
                 count[type(token)] += 1
             case CloseParenToken() | CloseBracketToken() | CloseBraceToken():
-                if count[token.mirror_type] <= 0:
+                if count[token.mirror_type] == 0:
                     break
                 count[token.mirror_type] -= 1
             case None:
