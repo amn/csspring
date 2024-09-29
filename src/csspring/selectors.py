@@ -32,7 +32,7 @@ def parse(production: Production, input: TokenStream) -> Product | Token | None:
 
 @parse.register
 def _(production: AlternativesProduction, input: TokenStream) -> Product | Token | None:
-    """Variant of `parse` for productions of the `|` combinator variety (see https://drafts.csswg.org/css-values-4/#component-combinators)."""
+    """Variant of `parse` for productions of the `|` combinator variety (see http://drafts.csswg.org/css-values-4/#component-combinators)."""
     input.mark()
     for element in production.elements:
         result = parse(element, input)
@@ -69,7 +69,7 @@ def parse_any_value(input: TokenStream) -> Product | None:
 
 @parse.register
 def _(production: CommaSeparatedRepetitionProduction, input: TokenStream) -> Product | None:
-    """Variant of `parse` for productions of the `#` multiplier variety (see https://drafts.csswg.org/css-values-4/#mult-comma)."""
+    """Variant of `parse` for productions of the `#` multiplier variety (see http://drafts.csswg.org/css-values-4/#mult-comma)."""
     result: list[Product | Token] = []
     input.mark()
     while True:
@@ -92,7 +92,7 @@ def _(production: CommaSeparatedRepetitionProduction, input: TokenStream) -> Pro
 
 @parse.register
 def _(production: ConcatenationProduction, input: TokenStream) -> Product | None:
-    """Variant of `parse` for productions of the ` ` combinator variety (see "juxtaposing components" at https://drafts.csswg.org/css-values-4/#component-combinators)."""
+    """Variant of `parse` for productions of the ` ` combinator variety (see "juxtaposing components" at http://drafts.csswg.org/css-values-4/#component-combinators)."""
     result: list[Product | Token] = []
     input.mark()
     for element in production.elements:
@@ -105,7 +105,7 @@ def _(production: ConcatenationProduction, input: TokenStream) -> Product | None
 
 @parse.register
 def _(production: NonEmptyProduction, input: TokenStream) -> Product | None:
-    """Variant of `parse` for productions of the `!` multiplier variety (see https://drafts.csswg.org/css-values-4/#mult-req)."""
+    """Variant of `parse` for productions of the `!` multiplier variety (see http://drafts.csswg.org/css-values-4/#mult-req)."""
     result = cast(Product, parse(production.element, input)) # The element of a non-empty production is concatenation, and the `parse` overload for `ConcatenationProduction` never returns a `Token`, only `Product | None`
     if result and any(tokens(result)):
         return result
@@ -143,7 +143,7 @@ def _(production: RepetitionProduction, input: TokenStream) -> Product | None:
 def _(production: TokenProduction, input: TokenStream) -> Token | None:
     """Variant of `parse` for token productions.
 
-    A token production can be identified in the grammar at https://drafts.csswg.org/selectors-4/#grammar with the `<...-token>` text.
+    A token production can be identified in the grammar at http://drafts.csswg.org/selectors-4/#grammar with the `<...-token>` text.
     """
     input.mark()
     if isinstance(token := input.consume_token(), production.type) and all((getattr(token, name) == value) for name, value in production.attributes.items()):

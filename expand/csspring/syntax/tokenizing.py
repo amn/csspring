@@ -46,7 +46,7 @@ def tokenize(input: PeekingUnreadingReader[FilteredCodePoint], *, parser_error: 
     def consume(n: int) -> None:
         """Consume the next code point from the stream.
 
-        Consuming removes a [filtered] code point from the stream. If no code points are available for consumption (the stream is "exhausted"), an empty string signifying the so-called EOF ("end of file", see https://drafts.csswg.org/css-syntax/#eof-code-point) value, is consumed instead.
+        Consuming removes a [filtered] code point from the stream. If no code points are available for consumption (the stream is "exhausted"), an empty string signifying the so-called EOF ("end of file", see http://drafts.csswg.org/css-syntax/#eof-code-point) value, is consumed instead.
         """
         nonlocal consumed # required for the `+=` to work for mutable non-locals like lists (despite the fact that the equivalent `extend` does _not_ require the statement)
         consumed += input.read(n) or [ FilteredCodePoint('', source='') ]

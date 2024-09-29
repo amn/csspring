@@ -3,6 +3,6 @@
 
 from ..values import Production
 
-# See https://drafts.csswg.org/css-syntax/#any-value
+# See http://drafts.csswg.org/css-syntax/#any-value
 any_value = Production()
 any_value.name = 'any_value'

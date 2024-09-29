@@ -1,4 +1,4 @@
-"""Implement the ["CSS Values and Units Module Level 4"](https://drafts.csswg.org/css-values-4) specification.
+"""Implement the ["CSS Values and Units Module Level 4"](http://drafts.csswg.org/css-values-4) specification.
 
 Only parts currently in use by the rest of the `csspring` pcakge, are implemented.
 """
@@ -135,7 +135,7 @@ class CommaSeparatedRepetitionProduction(Production):
 		self.element = element
 
 class Formatter:
-	"""Class of objects that offer procedures for serializing productions into streams of text formatted per the [value definition syntax](https://drafts.csswg.org/css-values-4/#value-defs)."""
+	"""Class of objects that offer procedures for serializing productions into streams of text formatted per the [value definition syntax](http://drafts.csswg.org/css-values-4/#value-defs)."""
 	grouping_strings = ('[ ', ' ]') # The kind of grouping symbol to use when a production expression must be surrounded with a pair of brace-like grouping symbols, in its serialized form
 	def grouping_mode(self, production: Production):
 		"""Determine whether a given production shall require an explicit pair of grouping symbols when featured as an _operand_ (e.g. in binary/unary operation context).
