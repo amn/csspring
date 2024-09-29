@@ -2,8 +2,7 @@
 
 Only parts currently in use by the rest of the `csspring` pcakge, are implemented.
 """
-from .syntax.tokenizing import Token, CommaToken, CommentToken, WhitespaceToken
-from .syntax.tokenizing import ColonToken
+from .syntax.tokenizing import Token, token_value, CommaToken, CommentToken, WhitespaceToken
 
 import builtins
 from collections.abc import Iterable, Mapping
@@ -182,11 +181,7 @@ class Formatter:
 			if hasattr(production.type, 'value'):
 				yield '<' + re.sub(r'(^)?[A-Z]', lambda m: (('-' if m[1] is None else '') + m[0].lower()), production.type.__name__) + '>' # type: ignore # MyPy 1.11 complains with "error: Unsupported operand types for + ("str" and "bytes")  [operator]", but the error appears to be a false positive: http://github.com/python/mypy/issues/12961 # TODO: Revisit the issue following MyPy updates
 			else:
-				if issubclass(production.type, ColonToken):
-					value = ','
-				else:
-					raise TypeError
-				yield repr(value)
+				yield repr(token_value(production.type))
 	@format.register
 	def _(self, production: CommaSeparatedRepetitionProduction) -> Iterable[str]:
 		yield from self.operand(production.element)
