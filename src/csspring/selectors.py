@@ -68,29 +68,6 @@ def parse_any_value(input: TokenStream) -> Product | None:
         return None
 
 @parse.register
-def _(production: CommaSeparatedRepetitionProduction, input: TokenStream) -> Product | None:
-    """Variant of `parse` for productions of the `#` multiplier variety (see https://drafts.csswg.org/css-values-4/#mult-comma)."""
-    result: list[Product | Token] = []
-    input.mark()
-    while True:
-        value: Product | Token | None
-        if result:
-            value = parse(production.delimiter, input)
-            if value is None:
-                break
-            result.append(value)
-        value = parse(production.element, input)
-        if value is None:
-            break
-        result.append(value)
-    if result:
-        input.discard_mark()
-        return result
-    else:
-        input.restore_mark()
-        return None
-
-@parse.register
 def _(production: ConcatenationProduction, input: TokenStream) -> Product | None:
     """Variant of `parse` for productions of the ` ` combinator variety (see "juxtaposing components" at https://drafts.csswg.org/css-values-4/#component-combinators)."""
     result: list[Product | Token] = []
@@ -126,9 +103,21 @@ def _(production: RepetitionProduction, input: TokenStream) -> Product | None:
     result: list[Product | Token] = []
     input.mark()
     while True:
+        if result and production.separator:
+            input.mark()
+            separator = parse(production.separator, input)
+            if separator is None:
+                input.restore_mark()
+                break
         value = parse(production.element, input)
         if value is None:
+            if result and production.separator:
+                input.restore_mark()
             break
+        if result and production.separator:
+            assert separator is not None
+            result.append(separator)
+            input.discard_mark()
         result.append(value)
         if len(result) == production.max:
             break
