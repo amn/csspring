@@ -80,14 +80,16 @@ class RepetitionProduction(Production):
 
 	Implements the `*` notation as defined at http://drafts.csswg.org/css-values-4/#mult-zero-plus.
 	"""
+	separator: Production | None = None
 	element: Production
 	min: int
 	max: int | None
-	def __init__(self, element: Production, min: int = 0, max: int | None = None):
+	def __init__(self, element: Production, min: int = 0, max: int | None = None, *, separator: Production | None = None):
 		"""
 		:param element: The production expressing the repeating part of this production
 		:param min: The minimum amount of times the parser must accept input, i.e. the minimum number of repetitions of token sequences accepted by the parser
 		:param max: The maximum amount of times the parser will be called, i.e. the maximum number of repetitions that may be consumed in the input; the value of `None` implies no maximum (i.e. no upper bound on repetition)
+		:param separator: A production expressing the "delimiting" part between any two repetitions of the `element` production; if omitted or `None`, there's _no_ delimiting part -- repetitions are _adjacent_
 		"""
 		assert min >= 0
 		assert max is None or max > 0
@@ -95,6 +97,8 @@ class RepetitionProduction(Production):
 		self.min = min
 		self.max = max
 		self.element = element
+		if separator:
+			self.separator = separator
 
 class OptionalProduction(RepetitionProduction):
 	"""Class of productions equivalent to `RepetitionProduction` with no lower bound and accepting no repetition of the element, meaning the element is expressed at most once.
@@ -117,22 +121,18 @@ class TokenProduction(Production):
 		self.type = type
 		self.attributes = attributes
 
+OWS = optional_whitespace = RepetitionProduction(TokenProduction(WhitespaceToken))
 whitespace = RepetitionProduction(TokenProduction(WhitespaceToken), min=1) # The white-space production; presence of white-space expressed with this production, is _mandatory_ (`min=1`); the definition was "hoisted" here because a) it depends on `RepetitionProduction` and `TokenProduction` definitions, which must thus precede it, and b) because the `CommaSeparatedRepetitionParser` definition that follows, depends on it, in turn
 
-class CommaSeparatedRepetitionProduction(Production):
+class CommaSeparatedRepetitionProduction(RepetitionProduction):
 	"""Class of productions that express a non-empty comma-separated repetition (CSR) of a production element.
-
-	Unlike `RepetitionProduction` which permits arbitrary number of the production element, this class does not currently implement arbitrary repetition bounds. The delimiting part (a comma optionally surrounded by white-space) is mandatory, which implies at least one repetition (two expressions of the element). Disregarding the delimiting behaviour, productions of this class thus behave like those of `RepetitionProduction` with `2` for `min` and `None` for `max` property values.
 
 	Implements the `#` notation as defined at http://drafts.csswg.org/css-values-4/#mult-comma.
 	"""
-	delimiter = ConcatenationProduction(OptionalProduction(AlternativesProduction(whitespace, TokenProduction(CommentToken))), TokenProduction(CommaToken), OptionalProduction(AlternativesProduction(whitespace, TokenProduction(CommentToken)))) # The production expressing the delimiter to use with the repetition, a comma with [optional] white-space around it
-	element: Production
-	def __init__(self, element: Production):
-		"""
-		:param element: A production to use for expressing the repeating part in this production
-		"""
-		self.element = element
+	separator = ConcatenationProduction(OWS, TokenProduction(CommaToken), OWS) # A comma with [optional] white-space around it
+	def __init__(self, element: Production, min: int = 1, max: int | None = None):
+		assert min >= 1 # "one or more times" (ref. definition); the spec. does not define whether a minimum of zero is permitted, so we err on the safer side
+		super().__init__(element, min, max)
 
 class Formatter:
 	"""Class of objects that offer procedures for serializing productions into streams of text formatted per the [value definition syntax](https://drafts.csswg.org/css-values-4/#value-defs)."""

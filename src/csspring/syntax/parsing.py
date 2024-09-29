@@ -411,7 +411,8 @@ def consume_list_of_component_values(input: Input, *, stop_token: type[Token | N
 
 def consume_simple_block(input: Input, *, to: Appender[SimpleBlock]) -> SimpleBlock:
     """Implements http://drafts.csswg.org/css-syntax/#consume-simple-block."""
-    assert isinstance(token := input.next_token(), (OpenBraceToken, OpenBracketToken, OpenParenToken))
+    token = input.next_token()
+    assert isinstance(token, (OpenBraceToken, OpenBracketToken, OpenParenToken))
     ending_token = token.mirror_type
     block = SimpleBlock()
     consume_token(input, to=block)
