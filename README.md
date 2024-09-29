@@ -30,7 +30,7 @@ The code snippet below demonstrates obtaining of a _parse tree_ (in the `stylesh
 
 ```python
 from csspring.parsing import normalize_input, parse_stylesheet
-stylesheet = parse_stylesheet(normalize_input(open('example.css', newline=''))))) # The `newline=''` argument prevents default re-writing of newline sequences in input — per the CSS Syntax spec., parsing does filtering of newline sequences so no rewriting by `open` is necessary or desirable
+stylesheet = parse_stylesheet(normalize_input(open('example.css', newline=''))) # The `newline=''` argument prevents default re-writing of newline sequences in input — per the CSS Syntax spec., parsing does filtering of newline sequences so no rewriting by `open` is necessary or desirable
 ```
 
 ## Documentation
