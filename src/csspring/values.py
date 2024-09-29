@@ -175,7 +175,7 @@ class Formatter:
 	@format.register
 	def _(self, production: TokenProduction) -> Iterable[str]:
 		if production.attributes:
-			if 'value' not in production.attributes or len(production.attributes) > 1:
+			if production.attributes.keys() != { 'value' }:
 				raise NotImplementedError # the "Values and Units" specification doesn't feature token productions with matching of attributes other than `value`
 			yield repr(production.attributes['value'])
 		else:
