@@ -29,7 +29,7 @@ It should go without saying that whether you choose to install the package with 
 The code snippet below demonstrates obtaining of a _parse tree_ (in the `stylesheet` variable) by parsing the file `example.css`:
 
 ```python
-from csspring.parsing import parse_stylesheet
+from csspring.syntax.parsing import parse_stylesheet
 stylesheet = parse_stylesheet(open('example.css', newline='')) # The `newline=''` argument prevents default re-writing of newline sequences in input — per the CSS Syntax spec., parsing does filtering of newline sequences so no rewriting by `open` is necessary or desirable
 ```
 
