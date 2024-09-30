@@ -29,8 +29,8 @@ It should go without saying that whether you choose to install the package with 
 The code snippet below demonstrates obtaining of a _parse tree_ (in the `stylesheet` variable) by parsing the file `example.css`:
 
 ```python
-from csspring.parsing import normalize_input, parse_stylesheet
-stylesheet = parse_stylesheet(normalize_input(open('example.css', newline=''))))) # The `newline=''` argument prevents default re-writing of newline sequences in input — per the CSS Syntax spec., parsing does filtering of newline sequences so no rewriting by `open` is necessary or desirable
+from csspring.parsing import parse_stylesheet
+stylesheet = parse_stylesheet(open('example.css', newline='')) # The `newline=''` argument prevents default re-writing of newline sequences in input — per the CSS Syntax spec., parsing does filtering of newline sequences so no rewriting by `open` is necessary or desirable
 ```
 
 ## Documentation
@@ -71,7 +71,7 @@ Parsing is offered only in the form of Python modules — no "command-line" prog
 
 ### Why?
 
-We wanted a "transparent" CSS parser — one that could be used in different configurations without it imposing limitations that would strictly speaking go beyond parsing. Put differently, we wanted a parser that does not assume any particular application, a software _library_ in the classical sense of the term, or a true _API_ if you will.
+We wanted a "transparent" CSS parser — one that could be used in different configurations without it imposing limitations that would strictly speaking go beyond parsing. Put differently, we wanted a parser that does not assume any particular application — a software _library_ in the classical sense of the term, or a true _API_ if you will.
 
 For instance, the popular [Less](http://lesscss.org) software seems to rather effortlessly parse CSS [3] text, but it invariably re-arranges white-space in the output, without giving the user any control over the latter. Less is not _transparent_ like that — there is no way to use it with recovery of the originally parsed text from the parse tree — parsing with Less is a one-way street for at least _some_ applications (specifically those that "transform" CSS but need to preserve all of the original input as-is).
 
@@ -79,7 +79,7 @@ In comparison, this library was written to preserve _all_ input, _as-is_. This b
 
 ### Why Python?
 
-As touched upon in [the disclaimer above](#disclaimer), the parser was written "from the bottom up" - if it ever adopts a top layer exposing its features with a "command line" tool, said layer will invariably have to tap into the rest of it, the library, and so in the very least a library is offered. Without a command-line tool (implying switches and other facilities commonly associated with command-line tools) the utility of the parser is tightly bound to the capabilities of e.g. the programming language it was written in, since the language effectively functions as the interface to the library (you can hardly use a library offered in the form of a C code without a C compiler and/or a dynamic linker). A parser is seldom used in isolation, after all — its output, the parse tree, is normally fed to another component in a larger application. Python is currently ubiquitous and attractive looking at a set of metrics that are relevant here. The collective amount of Python code is currently growing steadily, which drives adoption, which makes the prospect of offering CSS parsing written in specifically Python ever more enticing.
+As touched upon in [the disclaimer above](#disclaimer), the parser was written "from the bottom up" - if it ever adopts a top layer exposing its features with a "command line" tool, said layer will invariably have to tap into the rest of it, the library, and so in the very least a library is offered. Without a command-line tool (implying switches and other facilities commonly associated with command-line tools) the utility of the parser is tightly bound to the capabilities of e.g. the programming language it was written in, since the language effectively functions as the interface to the library (you can hardly use a library offered in the form of a C code without a C compiler and/or a dynamic linker). A parser is seldom used in isolation, after all — its output, the parse tree, is normally fed to another component in a larger application. Python is ubiquitous and attractive on a number of metrics relevant to us. The collective amount of Python code is growing steadily, which drives adoption, both becoming factors for choosing to offer CSS parsing written in specifically Python.
 
 Another factor for choosing Python was the fact we couldn't find any _sufficiently capable_ CSS parsing libraries written specifically as [reusable] Python module(s). While there _are_ a few CSS parsing libraries available, none declared compliance with or de-facto support CSS 3 (including features like nested rules etc). In comparison, this library was written in close alignment with CSS 3 standard specification(s) (see [the compliance declaration](#compliance)).
 

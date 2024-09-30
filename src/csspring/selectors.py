@@ -11,7 +11,8 @@ from .syntax.parsing import Input as TokenStream, Product, tokens # Conveniently
 from .syntax.tokenizing import Token, BadStringToken, BadURLToken, CloseBraceToken, CloseBracketToken, CloseParenToken, ColonToken, DelimToken, FunctionToken, HashToken, IdentToken, OpenBraceToken, OpenBracketToken, OpenParenToken, StringToken
 
 from .syntax.grammar import any_value
-from .values import Production, AlternativesProduction, CommaSeparatedRepetitionProduction, ConcatenationProduction, NonEmptyProduction, OptionalProduction, ReferenceProduction, RepetitionProduction, TokenProduction
+from .values import Production, AlternativesProduction, CommaSeparatedRepetitionProduction, ConcatenationProduction, NonEmptyProduction, OptionalProduction, ReferenceProduction, RepetitionProduction, TokenProduction, OWS
+from .utils import intersperse
 
 from functools import singledispatch
 from typing import cast
@@ -32,7 +33,7 @@ def parse(production: Production, input: TokenStream) -> Product | Token | None:
 
 @parse.register
 def _(production: AlternativesProduction, input: TokenStream) -> Product | Token | None:
-    """Variant of `parse` for productions of the `|` combinator variety (see https://drafts.csswg.org/css-values-4/#component-combinators)."""
+    """Variant of `parse` for productions of the `|` combinator variety (see http://drafts.csswg.org/css-values-4/#component-combinators)."""
     input.mark()
     for element in production.elements:
         result = parse(element, input)
@@ -50,49 +51,24 @@ def parse_any_value(input: TokenStream) -> Product | None:
     result: list[Token] = []
     count = { type: 0 for type in { OpenBraceToken, OpenBracketToken, OpenParenToken } }
     while True:
-        match token := input.consume_token():
+        match token := input.next_token():
             case BadStringToken() | BadURLToken():
                 break
             case OpenParenToken() | OpenBracketToken() | OpenBraceToken():
                 count[type(token)] += 1
             case CloseParenToken() | CloseBracketToken() | CloseBraceToken():
-                if count[token.mirror_type] <= 0:
+                if count[token.mirror_type] == 0:
                     break
                 count[token.mirror_type] -= 1
             case None:
                 break
+        input.consume_token()
         result.append(token)
-    if result:
-        return result
-    else:
-        return None
-
-@parse.register
-def _(production: CommaSeparatedRepetitionProduction, input: TokenStream) -> Product | None:
-    """Variant of `parse` for productions of the `#` multiplier variety (see https://drafts.csswg.org/css-values-4/#mult-comma)."""
-    result: list[Product | Token] = []
-    input.mark()
-    while True:
-        value: Product | Token | None
-        if result:
-            value = parse(production.delimiter, input)
-            if value is None:
-                break
-            result.append(value)
-        value = parse(production.element, input)
-        if value is None:
-            break
-        result.append(value)
-    if result:
-        input.discard_mark()
-        return result
-    else:
-        input.restore_mark()
-        return None
+    return result or None
 
 @parse.register
 def _(production: ConcatenationProduction, input: TokenStream) -> Product | None:
-    """Variant of `parse` for productions of the ` ` combinator variety (see "juxtaposing components" at https://drafts.csswg.org/css-values-4/#component-combinators)."""
+    """Variant of `parse` for productions of the ` ` combinator variety (see "juxtaposing components" at http://drafts.csswg.org/css-values-4/#component-combinators)."""
     result: list[Product | Token] = []
     input.mark()
     for element in production.elements:
@@ -105,12 +81,9 @@ def _(production: ConcatenationProduction, input: TokenStream) -> Product | None
 
 @parse.register
 def _(production: NonEmptyProduction, input: TokenStream) -> Product | None:
-    """Variant of `parse` for productions of the `!` multiplier variety (see https://drafts.csswg.org/css-values-4/#mult-req)."""
+    """Variant of `parse` for productions of the `!` multiplier variety (see http://drafts.csswg.org/css-values-4/#mult-req)."""
     result = cast(Product | None, parse(production.element, input)) # The element of a non-empty production is concatenation, and the `parse` overload for `ConcatenationProduction` never returns a `Token`, only `Product | None`
-    if result and any(tokens(result)):
-        return result
-    else:
-        return None
+    return result if result and any(tokens(result)) else None
 
 @parse.register
 def _(production: ReferenceProduction, input: TokenStream) -> Product | Token | None:
@@ -126,9 +99,21 @@ def _(production: RepetitionProduction, input: TokenStream) -> Product | None:
     result: list[Product | Token] = []
     input.mark()
     while True:
+        if result and production.separator:
+            input.mark()
+            separator = parse(production.separator, input)
+            if separator is None:
+                input.restore_mark()
+                break
         value = parse(production.element, input)
         if value is None:
+            if result and production.separator:
+                input.restore_mark()
             break
+        if result and production.separator:
+            assert separator is not None
+            result.append(separator)
+            input.discard_mark()
         result.append(value)
         if len(result) == production.max:
             break
@@ -143,7 +128,7 @@ def _(production: RepetitionProduction, input: TokenStream) -> Product | None:
 def _(production: TokenProduction, input: TokenStream) -> Token | None:
     """Variant of `parse` for token productions.
 
-    A token production can be identified in the grammar at https://drafts.csswg.org/selectors-4/#grammar with the `<...-token>` text.
+    A token production can be identified in the grammar at http://drafts.csswg.org/selectors-4/#grammar with the `<...-token>` text.
     """
     input.mark()
     if isinstance(token := input.consume_token(), production.type) and all((getattr(token, name) == value) for name, value in production.attributes.items()):
@@ -157,12 +142,18 @@ def parse_selector_list(input: TokenStream) -> Product | None:
 
     Parsing of selector lists is the _reason d'etre_ for this module and this is the [convenience] procedure that exposes the feature.
     """
-    return cast(Product | None, parse(grammar.selector_list, input))
+    return cast(Product | None, parse(ConcatenationProduction(OWS, grammar.selector_list, OWS), input))
 
 class Grammar:
     """The grammar defining the language of selector list expressions.
 
     Normally a grammar would be defined as a set of rules (for deriving productions), where each rule would feature a component to the left side of the `->` operator (the "rewriting" operator) and a component to the right side of the operator. Owing to relative simplicity of the Selectors grammar -- where the left-hand side component is always a production name _reference_ (an identifying factor of context free grammars), we leverage Python's meta-programming facilities and use class attribute assignment statements to define the rules instead, where the assigned value is the right side of the rule, an arbitrary production (which may be an opaque value). Each attribute of the grammar is assigned the corresponding name automatically, owing to the `__set_name__` dunder method of the common production (super)class (where appropriate).
+
+    NOTE: Some of the productions as defined in the specification, have been rewritten below to eliminate repetition. These rewritten productions are marked accordingly, for clarity.
+
+    NOTE: `intersperse` is used to insert white-space productions as required by the specification, which otherwise doesn't include them explicitly, instead describing white-space handling "in prose".
+
+    NOTE: There is no notation (defined by the Values & Units spec.) for expressing `RepetitionProduction` productions with a `separator` attribute value other than `None` (the '[ ... ]*' variant) or that of `CommaSeparatedRepetitionProduction` (the '[ ... ]#' variant). Nevertheless, these productions are employed below to eliminate repetition as part of optimizing the grammar.
 
     Implements http://drafts.csswg.org/selectors-4/#grammar.
     """
@@ -173,26 +164,17 @@ class Grammar:
     class_selector = ConcatenationProduction(TokenProduction(DelimToken, value='.'), TokenProduction(IdentToken))
     attr_matcher = ConcatenationProduction(OptionalProduction(AlternativesProduction(*(TokenProduction(DelimToken, value=value) for value in ('~', '|', '^', '$', '*')))), TokenProduction(DelimToken, value='='))
     attr_modifier = AlternativesProduction(*(TokenProduction(DelimToken, value=value) for value in ('i', 's')))
-    attribute_selector = AlternativesProduction(ConcatenationProduction(TokenProduction(OpenBracketToken), ReferenceProduction(wq_name), TokenProduction(CloseBracketToken)), ConcatenationProduction(TokenProduction(OpenBracketToken), ReferenceProduction(wq_name), ReferenceProduction(attr_matcher), AlternativesProduction(TokenProduction(StringToken), TokenProduction(IdentToken)), OptionalProduction(ReferenceProduction(attr_modifier)), TokenProduction(CloseBracketToken)))
+    attribute_selector = ConcatenationProduction(*intersperse(TokenProduction(OpenBracketToken), ReferenceProduction(wq_name), OptionalProduction(ConcatenationProduction(*intersperse(ReferenceProduction(attr_matcher), AlternativesProduction(TokenProduction(StringToken), TokenProduction(IdentToken)), OptionalProduction(ReferenceProduction(attr_modifier)), separator=OWS))), TokenProduction(CloseBracketToken), separator=OWS)) # Rewritten
     legacy_pseudo_element_selector = ConcatenationProduction(TokenProduction(ColonToken), AlternativesProduction(*(TokenProduction(IdentToken, value=value) for value in ('before', 'after', 'first-line', 'first-letter'))))
-    pseudo_class_selector = AlternativesProduction(ConcatenationProduction(TokenProduction(ColonToken), TokenProduction(IdentToken)), ConcatenationProduction(TokenProduction(ColonToken), TokenProduction(FunctionToken), ReferenceProduction(any_value), TokenProduction(CloseParenToken)))
+    pseudo_class_selector = ConcatenationProduction(TokenProduction(ColonToken), AlternativesProduction(TokenProduction(IdentToken), ConcatenationProduction(TokenProduction(FunctionToken), ReferenceProduction(any_value), TokenProduction(CloseParenToken)))) # Rewritten
     pseudo_element_selector = AlternativesProduction(ConcatenationProduction(TokenProduction(ColonToken), ReferenceProduction(pseudo_class_selector)), ReferenceProduction(legacy_pseudo_element_selector))
     pseudo_compound_selector = ConcatenationProduction(ReferenceProduction(pseudo_element_selector), RepetitionProduction(ReferenceProduction(pseudo_class_selector)))
     subclass_selector = AlternativesProduction(ReferenceProduction(id_selector), ReferenceProduction(class_selector), ReferenceProduction(attribute_selector), ReferenceProduction(pseudo_class_selector))
     compound_selector = NonEmptyProduction(ConcatenationProduction(OptionalProduction(ReferenceProduction(type_selector)), RepetitionProduction(ReferenceProduction(subclass_selector))))
     complex_selector_unit = NonEmptyProduction(ConcatenationProduction(OptionalProduction(ReferenceProduction(compound_selector)), RepetitionProduction(ReferenceProduction(pseudo_compound_selector))))
     combinator = AlternativesProduction(*(TokenProduction(DelimToken, value=value) for value in ('>', '+', '~')), ConcatenationProduction(*(TokenProduction(DelimToken, value=value) for value in ('|', '|'))))
-    complex_selector = ConcatenationProduction(ReferenceProduction(complex_selector_unit), RepetitionProduction(ConcatenationProduction(OptionalProduction(ReferenceProduction(combinator)), ReferenceProduction(complex_selector_unit))))
+    complex_selector = RepetitionProduction(ReferenceProduction(complex_selector_unit), min=1, separator=AlternativesProduction(ConcatenationProduction(OWS, ReferenceProduction(combinator), OWS), OWS)) # Rewritten
     complex_selector_list = CommaSeparatedRepetitionProduction(ReferenceProduction(complex_selector))
     selector_list = ReferenceProduction(complex_selector_list)
-    complex_real_selector = ConcatenationProduction(ReferenceProduction(compound_selector), RepetitionProduction(ConcatenationProduction(OptionalProduction(ReferenceProduction(combinator)), ReferenceProduction(compound_selector))))
-    complex_real_selector_list = CommaSeparatedRepetitionProduction(ReferenceProduction(complex_real_selector))
-    compound_selector_list = CommaSeparatedRepetitionProduction(ReferenceProduction(compound_selector))
-    simple_selector = AlternativesProduction(ReferenceProduction(type_selector), ReferenceProduction(subclass_selector))
-    simple_selector_list = CommaSeparatedRepetitionProduction(ReferenceProduction(simple_selector))
-    relative_selector = ConcatenationProduction(OptionalProduction(ReferenceProduction(combinator)), ReferenceProduction(complex_selector))
-    relative_selector_list = CommaSeparatedRepetitionProduction(ReferenceProduction(relative_selector))
-    relative_real_selector = ConcatenationProduction(OptionalProduction(ReferenceProduction(combinator)), ReferenceProduction(complex_real_selector))
-    relative_real_selector_list = CommaSeparatedRepetitionProduction(ReferenceProduction(relative_real_selector))
 
 grammar = Grammar()

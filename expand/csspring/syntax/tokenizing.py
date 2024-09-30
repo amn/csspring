@@ -9,6 +9,7 @@ from .preprocessing import filter_code_points, FilteredCodePoint
 from ..utils import CP, BufferedPeekingReader, is_surrogate_code_point_ordinal, IteratorReader, join, parser_error, PeekingUnreadingReader
 
 from abc import ABC
+import builtins
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from decimal import Decimal
@@ -46,7 +47,7 @@ def tokenize(input: PeekingUnreadingReader[FilteredCodePoint], *, parser_error: 
     def consume(n: int) -> None:
         """Consume the next code point from the stream.
 
-        Consuming removes a [filtered] code point from the stream. If no code points are available for consumption (the stream is "exhausted"), an empty string signifying the so-called EOF ("end of file", see https://drafts.csswg.org/css-syntax/#eof-code-point) value, is consumed instead.
+        Consuming removes a [filtered] code point from the stream. If no code points are available for consumption (the stream is "exhausted"), an empty string signifying the so-called EOF ("end of file", see http://drafts.csswg.org/css-syntax/#eof-code-point) value, is consumed instead.
         """
         nonlocal consumed # required for the `+=` to work for mutable non-locals like lists (despite the fact that the equivalent `extend` does _not_ require the statement)
         consumed += input.read(n) or [ FilteredCodePoint('', source='') ]
@@ -502,3 +503,26 @@ def is_non_printable_code_point(cp: CP) -> bool:
 def is_whitespace(cp: CP) -> bool:
     """See http://drafts.csswg.org/css-syntax/#whitespace."""
     return is_newline(cp) or cp in ('\t', ' ')
+
+# Map of values by token type, for types of tokens which do _not_ have the `value` attribute
+token_values = { # For the `token_value` procedure to work as intended, subtypes should be listed _before_ their supertype(s)
+    OpenBraceToken: '{',
+    OpenBracketToken: '[',
+    OpenParenToken: '(',
+    CloseBraceToken: '}',
+    CloseBracketToken: ']',
+    CloseParenToken: ')',
+    ColonToken: ':',
+    CommaToken: ',',
+    SemicolonToken: ';',
+    CDCToken: '->',
+    CDOToken: '!--',
+}
+
+def token_value(type: builtins.type[Token]) -> str:
+    """Get the value of a token by its type for types of tokens that do _not_ feature a `value` attribute.
+
+    :param type: Type of token to get the value of
+    :returns: The value common to the type of tokens
+    """
+    return next(value for key, value in token_values.items() if issubclass(type, key))

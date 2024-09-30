@@ -22,6 +22,6 @@ class MakeCommand(Command):
         subprocess.check_call(('make', '-C', self.build_lib, '-f', os.path.realpath('Makefile')))
 
 class BuildCommand(setuptools.command.build.build):
-    sub_commands = [ ('build_make', None) ] + setuptools.command.build.build.sub_commands # Makes the `build_make` command a sub-command of the `build_command`, which has the effect of the former being invoked when the latter is invoked (which is invoked in turn when the wheel must be built, through the `bdist_wheel` command)
+    sub_commands = [ ('build_make', None) ] + setuptools.command.build.build.sub_commands # Makes the `build_make` command a sub-command of the `build` command, which has the effect of the former being invoked when the latter is invoked (which is invoked in turn when the wheel must be built, through the `bdist_wheel` command)
 
 setup(cmdclass={ 'build': BuildCommand, 'build_make': MakeCommand })
