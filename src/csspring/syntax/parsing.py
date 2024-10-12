@@ -20,7 +20,7 @@ import builtins
 from itertools import chain
 
 from collections.abc import Iterable, Iterator, MutableSequence, Sequence
-from typing import cast, Protocol, runtime_checkable, TypeAlias, Union
+from typing import Any, cast, Protocol, runtime_checkable, TypeAlias, Union
 
 class InvalidRuleError(ParseError):
     """See http://drafts.csswg.org/css-syntax/#invalid-rule-error."""
@@ -181,7 +181,7 @@ class StyleSheet(MutableProduct):
     def rules(self) -> Sequence[Rule]:
         """The rules (_only_ those directly nested, i.e. "top-level") of the style sheet."""
         return self.contents.rules
-    def __init__(self, *args, location: Location | None = None, **kwargs):
+    def __init__(self, *args: Any, location: Location | None = None, **kwargs: Any):
         """Initialize the style sheet.
 
         The stylesheet starts empty, only storing specified location."""
@@ -496,7 +496,9 @@ def consume_value_of_unicode_range_descriptor(string: str) -> Sequence[Component
     """Implements http://drafts.csswg.org/css-syntax/#consume-unicode-range-value."""
     return consume_list_of_component_values(TokenStream(tokenize(tokenizing.normalize_input(string), unicode_ranges_allowed=True)), to=[])
 
-def normalize_input(input: Input | Iterable[Token] | Iterable[str]) -> Input:
+NormalizeInput = Input | Iterable[Token] | Iterable[str]
+
+def normalize_input(input: NormalizeInput) -> Input:
     """Wrap input (if needed) into a "canonical" kind of parser input object which the latter can use directly.
 
     Implements http://drafts.csswg.org/css-syntax/#normalize-into-a-token-stream, with some following caveats.
@@ -522,7 +524,7 @@ def normalize_input(input: Input | Iterable[Token] | Iterable[str]) -> Input:
                 return TokenStream(input)
     return TokenStream(tokenize(tokenizing.normalize_input(input)))
 
-def parse_stylesheet(input, *, location: StyleSheet.Location | None = None, **kwargs) -> StyleSheet:
+def parse_stylesheet(input: NormalizeInput, *, location: StyleSheet.Location | None = None, **kwargs: Any) -> StyleSheet:
     """Parse a stylesheet.
 
     Attempts to implement http://drafts.csswg.org/css-syntax/#parse-stylesheet with the following exception(s):

@@ -8,7 +8,7 @@ import builtins
 from collections.abc import Iterable, Mapping
 from functools import singledispatchmethod
 import re
-from typing import cast
+from typing import Any, cast
 
 class Production:
     """An [abstract] class of CSS grammar elements.
@@ -22,7 +22,7 @@ class Production:
     Note that a production is not the same as a [parse] product -- the former is an element of some language grammar, while the latter is a result of parsing a sequence of tokens in accordance with a grammar production, in effect expressing one single element from the set of all permutations a production would permit, corresponding to consumed part of the sequence.
     """
     name: str
-    def __set_name__(self, _, name):
+    def __set_name__(self, _: Any, name: str) -> None:
         assert not hasattr(self, "name") or self.name == name # Given the usage context, we don't want to support re-setting the name, not with a different value at least
         self.name = name
 
@@ -112,7 +112,7 @@ class TokenProduction(Production):
     """
     type: type[Token]
     attributes: Mapping
-    def __init__(self, type: builtins.type[Token], **attributes):
+    def __init__(self, type: builtins.type[Token], **attributes: Any):
         """
         :param type: The type of token this production will express
         :param attributes: Mapping of presumably token attribute values by name, to use for expressing the set of attributes on the token this production will express
@@ -136,7 +136,7 @@ class CommaSeparatedRepetitionProduction(RepetitionProduction):
 class Formatter:
     """Class of objects that offer procedures for serializing productions into streams of text formatted per the [value definition syntax](http://drafts.csswg.org/css-values-4/#value-defs)."""
     grouping_strings = ('[ ', ' ]') # The kind of grouping symbol to use when a production expression must be surrounded with a pair of brace-like grouping symbols, in its serialized form
-    def grouping_mode(self, production: Production):
+    def grouping_mode(self, production: Production) -> bool:
         """Determine whether a given production shall require an explicit pair of grouping symbols when featured as an _operand_ (e.g. in binary/unary operation context).
         :returns: `True` if the expression of `production` serialized with this formatter, should feature explicit grouping symbols wrapping it, `False` otherwise
         """
@@ -202,7 +202,7 @@ class Formatter:
         :raises AttributeError: if the production does not have a name
         """
         return production.name.replace('_', '-')
-    def operand(self, production) -> Iterable[str]:
+    def operand(self, production: Production) -> Iterable[str]:
         group_start, group_end = self.grouping_strings if self.grouping_mode(production) else ('', '')
         yield group_start
         yield from self.format(production)
