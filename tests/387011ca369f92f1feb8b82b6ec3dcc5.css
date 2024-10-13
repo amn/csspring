@@ -1,0 +1,11 @@
+body {
+	margin: auto;
+	max-width: max-content;
+}
+p, li, pre {
+	max-width: 35em;
+}
+pre {
+	white-space: inherit;
+	margin-inline-start: 1em;
+}

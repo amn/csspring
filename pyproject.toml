@@ -23,7 +23,16 @@ license = { file = "LICENSE.txt" }
 readme = "README.md"
 requires-python = ">=3.11"
 
+[project.optional-dependencies]
+tests = [ "mypy>=1.7.0", "pytest>=6.2.4" ]
+
 [project.urls]
 Github = "http://github.com/amn/csspring"
+
+[tool.mypy]
+packages = [ "csspring" ]
+
+[tool.pytest.ini_options]
+testpaths = "tests"
 
 [tool.setuptools_scm]

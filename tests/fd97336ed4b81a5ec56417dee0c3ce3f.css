@@ -1,0 +1,542 @@
+@namespace "http://www.w3.org/1999/xhtml";
+html, body, body *,
+::placeholder {
+	all: unset;
+	display: revert;
+}
+html {
+	height: 100%;
+}
+body {
+	background-color: var(--main-background-color);
+	display: flex;
+	flex-direction: column;
+	font-family: var(--font-family);
+	margin: 0;
+	height: 100%;
+	color: var(--body-text-color);
+	cursor: default;
+	--frame-color: black;
+	--input-output-text-color: black;
+	--main-background-color: white;
+	--body-text-color: #444;
+	--font-family: Arial, Helvetica, sans-serif;
+	--heading-color: #222;
+	--attn-rgb: 41, 116, 181;
+	--attn-color: rgb(var(--attn-rgb));
+	--warn-color: #e2231a;
+	--message-background-color: #f2f2f2;
+	--padding-inline: 20vw;
+}
+body.wait {
+	cursor: progress;
+}
+:any-link {
+	color: var(--attn-color);
+	cursor: pointer;
+	text-decoration: revert;
+}
+:any-link:hover {
+	text-decoration: underline;
+}
+::placeholder {
+	opacity: 0.25;
+	font-family: var(--font-family);
+	white-space: revert;
+}
+[hidden], datalist {
+	display: none !important; /** TODO: We do _not_ want to use `!important` if we can avoid it -- it overrides even rules defined by user, which is a UX no-no; in this case, however, I can't think of a swift and elegant way to have certain elements not display no matter what other rules that may have been set by author */
+}
+blockquote {
+	margin-inline: 1em;
+	margin-block: 1em;
+}
+:is(button-select, [is=button-select]):defined {
+	position: relative;
+	button:first-child {
+		padding-inline-end: 2.75em;
+	}
+	button:not(:first-child) {
+		box-shadow: 0 0.5em 0.5em 0 rgba(0, 0, 0, 0.2);
+	}
+	&::part(expander) {
+		color: var(--main-background-color);
+		padding-block-end: 0.85em;
+		padding-inline: 0.5em;
+		cursor: pointer;
+	}
+	&::part(menu) {
+		z-index: 2;
+	}
+}
+caption, th {
+	font-weight: bold;
+	font-size: smaller;
+}
+caption {
+	text-align: center;
+}
+em {
+	font-style: italic;
+}
+details blockquote {
+	border-inline-start: 0.25em solid var(--body-text-color);
+	margin: 0.5em;
+	margin-inline-start: 0;
+	padding-inline-start: 0.5em;
+}
+dialog:not(.inline) {
+	background-color: var(--main-background-color);
+	box-shadow: 0 0.5em 2em 0 rgba(0, 0, 0, 0.2);
+	left: 50%;
+	padding: 1em;
+	position: fixed;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	z-index: 1;
+}
+:disabled, [aria-disabled] {
+	cursor: not-allowed;
+	filter: opacity(0.25) saturate(0.25);
+}
+:focus {
+	outline: 0.125em solid var(--attn-color);
+	outline-offset: 0.25em;
+}
+dialog:not([open]) {
+	display: none;
+}
+dialog::backdrop {
+	backdrop-filter: grayscale(1);
+}
+dialog .title {
+	margin: 0.5rem 1rem;
+}
+dialog .title .icon {
+	width: 1.5em;
+	height: 1.5em;
+	vertical-align: middle;
+	margin-inline-end: 0.5em;
+}
+dialog .content {
+	margin: 1em;
+}
+.buttons {
+	align-items: baseline;
+	display: flex;
+	justify-content: end;
+	gap: 0.5em;
+}
+.buttons > progress {
+	order: -1;
+}
+.buttons > [value="cancel"] {
+	order: -1;
+	margin-inline-end: auto;
+}
+fieldset {
+	padding: 1em;
+	border: 0.125em solid var(--message-background-color);
+	border-radius: 0.25em;
+}
+h1, h2, h3, h4, h5, h6 {
+	color: var(--heading-color);
+	margin: 1em 0;
+}
+h1 {
+	font-size: 2.25em;
+}
+h2 {
+	font-size: 1.5em;
+}
+h3 {
+	font-size: 1.25em;
+}
+h4 {
+	font-weight: bold;
+}
+button,
+input[type=button],
+input[type=submit] {
+	background-color: var(--attn-color);
+	color: var(--main-background-color);
+	border-radius: 0.25em;
+	padding: 0.65em 1.35em;
+	text-align: center;
+}
+button:enabled,
+input[type=button]:enabled,
+input[type=submit]:enabled,
+input[type=checkbox]:enabled,
+input[type=radio]:enabled,
+select:enabled {
+	cursor: pointer;
+}
+button:not([type]),
+button[type=submit],
+input[type=submit] {
+	background-color: var(--input-output-text-color);
+}
+button.primed:not([type]),
+button[type=button].primed,
+button[type=submit].primed,
+input[type=submit].primed,
+input[type=button].primed {
+	background-color: var(--warn-color);
+}
+input:not([type]),
+input[type=checkbox],
+input[type=number],
+input[type=password],
+input[type=radio],
+input[type=search],
+input[type=text],
+select {
+	background-color: var(--main-background-color);
+	border: 0.125em solid rgba(var(--attn-rgb), 0.25);
+	border-radius: 0.25em;
+	color: var(--input-output-text-color);
+	padding: 0.65em 1em;
+}
+input:not([type]),
+input[type=number],
+input[type=password],
+input[type=search],
+input[type=text] {
+	font-family: monospace;
+	font-size: calc(1em); /** Appears to fix the default smaller text height for monospace text as set by UA, while `1em` does not, and I haven't been able to determine why. */
+}
+input:not([type]):enabled,
+input[type=number]:enabled,
+input[type=password]:enabled,
+input[type=search]:enabled,
+input[type=text]:enabled {
+	cursor: text;
+}
+input[type=checkbox],
+input[type=radio] {
+	align-items: center; /** TODO: Why doesn't `align-content` put the radio button dot in the _middle_? */
+	display: inline-flex;
+	font-family: "Font Awesome Solid";
+	height: 1em;
+	justify-content: center;
+	padding: unset;
+	vertical-align: middle;
+	width: 1em;
+}
+input[type=radio] {
+	border-radius: 50%;
+}
+input[type=checkbox]:checked::before {
+	content: '\f00c';
+}
+input[type=radio]:checked::before {
+	content: '\f111';
+	transform: scale(0.5); /** Couldn't find a smaller filled circle glyph in FA so scaling back the one it had; should probably include our own glyphs for these kind of things */
+}
+
+label[for$="-input"]:not([aria-disabled]) {
+	cursor: pointer;
+}
+
+legend {
+	font-weight: bold;
+	font-size: smaller;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+li.warning::before {
+	color: var(--warn-color);
+	content: "⚠";
+	font-size: 2em;
+	position: relative;
+	top: 0.125em;
+}
+main {
+	align-content: safe center;
+	display: flex;
+	flex-wrap: wrap;
+	flex-grow: 1;
+	gap: 1em;
+	justify-content: safe center;
+	padding: 2em;
+	position: relative; /** This is a courtesy for descendants of `main` that want absolute positioning -- there's no reason the default origin for such positioning shouldn't be their `main` ancestor */
+}
+meter {
+	appearance: meter;
+	background: var(--message-background-color);
+	display: inline-block;
+	height: var(--meter-height);
+	width: 10em;
+	--meter-height: 0.5em;
+}
+meter::-webkit-meter-bar {
+	all: unset;
+	height: var(--meter-height);
+}
+meter::-webkit-meter-optimum-value {
+	background: var(--input-output-text-color);
+}
+:-moz-meter-optimum::-moz-meter-bar {
+	background: var(--input-output-text-color);
+}
+meter::-webkit-meter-suboptimum-value {
+	background: var(--attn-color);
+}
+:-moz-meter-sub-optimum::-moz-meter-bar {
+	background: var(--attn-color);
+}
+meter::-webkit-meter-even-less-good-value {
+	background: var(--warn-color);
+}
+:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+	background: var(--warn-color);
+}
+output {
+	color: var(--input-output-text-color);
+}
+p {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+progress {
+	animation: 0.5s linear infinite move_progress_background;
+	background: var(--message-background-color) url('data:image/svg+xml,<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg"><rect fill="rgba(255, 255, 255, 0.125)" height="100%" width="100%" /><rect fill="rgba(0, 0, 0, 0.125)" height="100" transform="translate(100 0) skewX(-45)" width="100" /></svg>');
+	height: 0.75em;
+	width: 10em;
+}
+progress::-webkit-progress-bar {
+	all: unset;
+}
+progress::-webkit-progress-value {
+	background-color: var(--attn-color);
+	mix-blend-mode: multiply;
+}
+progress::-moz-progress-bar {
+	background-color: var(--attn-color);
+	mix-blend-mode: multiply;
+}
+progress:indeterminate::-moz-progress-bar {
+	background-color: unset;
+}
+select {
+	background: var(--main-background-color) url('data:image/svg+xml,<svg viewBox="287 412 12 19" xmlns="http://www.w3.org/2000/svg"><polygon points="287,419 293,413 299,419" /><polygon points="287.042,424.083 299,424 293.042,429.958" /></svg>') no-repeat right 0.75em center;
+	background-size: 0.75em;
+	padding-right: calc(0.75em * 3);
+	white-space: nowrap;
+}
+small {
+	font-size: smaller;
+}
+strong {
+	font-weight: bold;
+}
+summary {
+	cursor: pointer;
+	list-style: inside disclosure-closed;
+}
+summary::marker {
+	color: var(--attn-color);
+}
+details[open] > summary {
+	list-style-type: disclosure-open;
+}
+pre {
+	white-space: pre;
+}
+table {
+	border-collapse: separate;
+	border-spacing: 1em 0.5em;
+}
+td, th {
+	padding: 0.5rem 1rem; /** We use `rem` because size of `em` may differ betewen header and body cells, while we would ideally want values to be aligned wrt padding */
+	text-align: initial;
+}
+u {
+	text-decoration: underline;
+}
+ul {
+	margin-block: 1em;
+	padding-inline-start: 1em;
+}
+video {
+	object-fit: contain;
+}
+[data-icon]:before {
+	content: attr(data-icon);
+	font-family: "UiO Icons Solid", "Font Awesome Solid";
+	margin-inline-end: 0.5em;
+}
+code, pre, samp, .verbatim {
+	font-family: monospace;
+	font-size: calc(1em);
+}
+body > header, body > footer {
+	color: var(--main-background-color);
+	display: flex;
+	flex-wrap: wrap;
+}
+body > header output,
+body > footer output {
+	color: inherit;
+}
+body > header :any-link,
+body > footer :any-link {
+	color: var(--main-background-color);
+	text-decoration: underline;
+}
+body > header {
+	background-color: #2d2d2e;
+}
+body > header h1  {
+	font-weight: bold;
+}
+body > header h1,
+body > header h2,
+body > footer h3 {
+	color: var(--message-background-color);
+}
+body > header h1 :any-link:not(:hover),
+body > header h2 :any-link:not(:hover),
+body > footer h3 :any-link:not(:hover) {
+	text-decoration: none;
+}
+body > header > hgroup,
+body > footer {
+	padding-left: var(--padding-inline);
+	padding-right: var(--padding-inline);
+}
+body > header > hgroup {
+	flex-grow: 1;
+	padding-top: 1.5em;
+	padding-bottom: 1.5em;
+}
+body > header > hgroup:not(:last-child) {
+	padding-right: 1em;
+}
+body > header > hgroup > *  {
+	margin: 0;
+}
+body > header h2  {
+	font-size: 1.2em;
+	margin-top: 0.25em;
+}
+body > footer:first-of-type > a[href$='//www.uio.no/'] {
+	font-weight: bold;
+	text-decoration: none;
+}
+body > footer:first-of-type > a[href$='//www.uio.no/'] > abbr {
+	font-family: Georgia, serif;
+	font-weight: initial;
+}
+body > footer:first-of-type > a[href$='//www.uio.no/'] > abbr + span {
+	color: transparent;
+	content: url('data:image/svg+xml,<svg fill="%23ee2e24" viewBox="-7 -7 14 31" xmlns="http://www.w3.org/2000/svg"><circle r="7" /><circle r="7" cy="17" /></svg>');
+	margin: 0 0.3em;
+	width: 0.35em;
+}
+body > header > #user-profile-para {
+	align-self: flex-end;
+	display: flex;
+	align-items: baseline;
+	gap: 1em;
+	margin: 1.5em var(--padding-inline) 1.5em auto;
+}
+body > header > #user-profile-para label[data-icon] {
+	display: inline-block;
+	visibility: hidden;
+	width: 1em;
+	margin-inline-end: 0.25em;
+}
+body > header > #user-profile-para label[data-icon]::before {
+	visibility: visible;
+}
+body > footer {
+	background-color: black;
+}
+body > footer:first-of-type {
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+body > footer:last-of-type {
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+body > footer > p:first-child {
+	flex-grow: 1;
+}
+body > footer > div {
+	margin-block: 1em;
+	flex-grow: 0.25;
+}
+body > footer img[src="/uio-seal.svg"] {
+	height: 6em;
+}
+.alert {
+	background-color: var(--message-background-color);
+	color: var(--body-text-color);
+	padding: 1.5em 1.5em 1.5em 3.5em;
+	position: relative;
+	margin: 2em auto;
+}
+.alert::before {
+	color: var(--attn-color);
+	content: '\f06a'; /** An exclamation mark */
+	font-family: "Font Awesome Solid";
+	left: 1.5em;
+	position: absolute;
+}
+.conjunction {
+	text-transform: initial;
+}
+.alert > *:first-child {
+	margin-top: unset;
+}
+.alert > *:last-child {
+	margin-bottom: unset;
+}
+.error.alert::before {
+	content: '\f057'; /** A uniform cross */
+}
+.priority.alert {
+	background-color: var(--attn-color);
+	color: var(--main-background-color);
+}
+.priority.alert :any-link {
+	text-decoration: underline;
+}
+.priority.alert::before {
+	color: var(--main-background-color);
+}
+body > header .alert {
+	flex-basis: 100%;
+	margin: 0;
+	max-width: none;
+	padding-left: calc(var(--padding-inline) + 2em);
+	padding-right: var(--padding-inline);
+}
+body > header .alert::before {
+	left: var(--padding-inline);
+}
+.interactive {
+	background-color: var(--attn-color);
+	color: var(--main-background-color);
+}
+@font-face {
+	font-family: "UiO Icons Solid";
+	src: url("UiO-Icons-Solid.woff2"); /** Rearranges Font Awesome icons to match known Unicode code points */
+	font-display: block;
+}
+@font-face {
+	font-family: "Font Awesome Solid";
+	src: url("fa-solid-900.woff2");
+	font-weight: 900;
+}
+@keyframes move_progress_background {
+	from {
+		background-position: 0;
+	}
+	to {
+		background-position: 1.5em;
+	}
+}

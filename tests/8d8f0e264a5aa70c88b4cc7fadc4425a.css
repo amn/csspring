@@ -1,0 +1,223 @@
+@import url(rb.css);
+body {
+	background: var(--brand-color);
+	--link-color: white;
+	--foreground-color: white;
+	color: var(--foreground-color);
+}
+main {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+}
+h1 {
+	display: none;
+}
+#desc-text {
+	max-width: 30em;
+	margin-left: 1em;
+	margin-right: 1em;
+}
+#desc-text:before {
+	display: block;
+	margin: 1em auto;
+	width: 15em;
+	content: url(logo-red-black-white.svg);
+}
+.player {
+	margin: 1em;
+	position: relative;
+}
+.player > video {
+	width: 100%;
+	max-width: 30em;
+	max-height: 100%;
+	display: block;
+}
+.player > .controls {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	visibility: hidden;
+}
+.player > .controls > button:not([hidden]) {
+	all: unset;
+	background-size: auto 25%;
+	background-repeat: no-repeat;
+	background-position: top 1em left 1em;
+	height: 100%;
+	width: 100%;
+	cursor: pointer;
+}
+.player > .controls > button > .label {
+	display: none;
+}
+.player > .controls > button[name=play] {
+	background-image: url(play-icon.svg);
+}
+.player > .controls > button[name=pause] {
+	background-image: url(pause-icon.svg);
+}
+.player > .controls {
+	visibility: visible;
+	/*animation: 2s linear 2s 1 normal forwards running fade-out;*/
+}
+img#app-preview-on-handheld {
+	max-width: 20em;
+}
+.buttons {
+	text-align: center;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.buttons > a.button {
+	background-color: black;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-origin: content-box;
+	border: 0.125em solid #a6a6a6;
+	border-radius: 0.35em;
+	box-shadow: 0 0.25em 0.5em 0.25em rgba(0, 0, 0, 0.5);
+	color: white;
+	display: block;
+	margin: 1em;
+	padding: 0.5em;
+	width: 12em;
+	font-weight: bold;
+}
+.buttons > a.get-app-anchor {
+	min-height: 3em;
+}
+.buttons > .get-app-anchor > .text {
+	display: none;
+}
+.apple-ios.get-app-anchor,
+.buttons > .google-android.get-app-anchor {
+	opacity: 0.25;
+	pointer-events: none;
+}
+.apple-ios.get-app-anchor {
+	background-image: url(google-play-button.svg);
+}
+.buttons > .google-android.get-app-anchor {
+	background-image: url(app-store-button.svg);
+}
+.buttons > .plain {
+}
+.buttons > a.app.button {
+	font-size: 1.5em;
+	margin: 3em;
+	padding-left: 1em;
+	padding-right: 1em;
+	text-transform: uppercase;
+}
+body > footer {
+	margin: 1em;
+	text-align: center;
+}
+/*@media (min-width: 50em) and (min-height: 30em) {
+	html, body {
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		font-size: 1.4em;
+	}
+	main {
+		height: 100%;
+	}
+	main > section.about {
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		padding: 1em;
+	}
+	#c1 {
+		align-items: center;
+		box-sizing: border-box;
+		display: flex;
+		height: 100%;
+		justify-content: center;
+		overflow: auto;
+		padding: 1em;
+	}
+	#c2 {
+		box-sizing: border-box;
+		display: flex;
+		height: 100%;
+		flex-direction: column;
+		margin: unset;
+		max-width: 50%;
+		overflow: auto;
+		padding: 0 1em; 
+	}
+	#c3 {
+		flex: auto;
+		overflow: auto;
+		width: unset;
+		position: relative;
+	}
+	#c3 > video {
+		height: 100%;
+		width: 100%;
+		display: block;
+		position: absolute;
+	}
+	#logo-image {
+		width: 50%;
+		max-width: 20em;
+		min-width: 10em;
+		display: inline-block;
+		margin: 0 1em;
+	}
+	#desc-text {
+		margin: 0 auto;
+		padding: 1em;
+		line-height: 1.2;
+		max-width: 75%;
+		box-sizing: border-box;
+		display: flex;
+		align-items: safe center;
+	}
+	#desc-text:before{
+		display: unset;
+		margin: unset;
+		max-width: unset;
+		width: 30em;
+		margin-right: 2em;
+	}
+	.get-app-anchor:after {
+		display: inline-block;
+		width: 10em;
+	}
+	.get-app-anchor > .text {
+		display: none;
+	}
+	.google-android.get-app-anchor:after {
+		content: url(google-play-button.svg);
+	}
+	.apple-ios.get-app-anchor:after {
+		content: url(app-store-button.svg);
+	}
+	img.preview {
+		width: unset;	
+		height: 100%;
+	}
+}*/
+
+@keyframes fade-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}

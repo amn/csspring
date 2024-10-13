@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lekton:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lusitana:wght@400;700&display=swap');
+@namespace "http://www.w3.org/1999/xhtml";
+:any-link {
+	color: var(--interactive-color);
+}
+:not(p) :any-link {
+	text-decoration: none;
+}
+p :any-link {
+	text-decoration: revert;
+}
+/*::selection {
+	background-color: var(--selection-bg-color);
+	color: var(--selection-text-color);
+}*/
+[lang] {
+	font-style: italic;
+}
+html {
+	align-items: safe center;
+	display: flex;
+	height: 100%;
+	justify-content: safe center;
+}
+body {
+	--interactive-color: hsl(205, 100%, 25%);
+	align-items: start;
+	background-color: hsl(0, 0%, 90%);
+	color: hsl(0, 0%, 15%);
+	gap: 2em;
+	display: flex;
+	font-family: 'Lusitana', serif;
+	margin: 2em;
+}
+code {
+	font-family: monospace;
+}
+body > * {
+	break-inside: avoid;
+	margin-inline: auto;
+	max-width: 35em;
+}
+body > header {
+	align-self: start;
+	flex-basis: fit-content;
+	min-width: 10em;
+	order: -1;
+	text-align: end;
+}
+body > header:not(:first-child) {
+	font-size: smaller;
+	max-width: 15em;
+}
+body > header > :first-child,
+body > * > :is(h1, h2, h3, h4, h5, h6) {
+	margin-block-start: 0;
+}
+body > main p {
+	text-align: justify;
+}
+body > nav {
+	position: sticky;
+	top: 2em;
+}
+abbr.subtle {
+	text-decoration: none;
+}
+h1, h2, h3, h4, h5, h6 {
+	font-weight: unset;
+	margin-block: 2em 0.5em;
+}
+p {
+	line-height: 1.5em;
+}
+pre {
+	margin-left: 1em;
+	overflow: auto;
+	white-space: pre-wrap;
+}
+.blog {
+	list-style: none;
+	padding-inline: 0;
+}
+.blog  > li > h3 {
+	margin-block: unset;
+}
+.blog > li > p {
+	margin-block: unset;	
+}
+.blog > li > small {
+	opacity: 0.5;
+	text-align: right;
+}
+.blog > li > small:not([hidden]) {
+	display: block;
+}
+input {
+	border: 0.125em solid var(--interactive-color);
+	padding: 0.25em 0.5em;
+	font: inherit;
+	box-shadow: 0.25em 0.25em 0.5em rgba(0, 0, 0, 0.125);
+}
+nav > ul {
+	padding-inline-start: 1em;
+}
+nav > ul > li {
+	margin-block: 0.5em;
+	min-width: 10em;
+}
+body > #on-this-page {
+	position: sticky;
+	top: 0;
+}
+ul.fragment-list {
+	list-style: '# ';
+}
+#on-this-page > ul {
+	padding-left: 0;
+}
+#on-this-page ul > li.shown {
+	list-style-type: "⏿ ";
+}
+#on-this-page ul > li.shown::marker {
+	color: var(--highlight-color);
+	font-weight: bold;
+}
+@media(prefers-color-scheme: dark) {
+	body {
+		--interactive-color: hsl(205, 60%, 40%);
+		background-color: hsl(0, 0%, 10%);
+		color: hsla(0, 0%, 85%, 0.5);
+	}
+	code, em, strong, :is(h1, h2, h3, h4, h5, h6) {
+		filter: brightness(1.25);
+	}
+}
+@media(width < 40em) {
+	body {
+		flex-wrap: wrap;
+	}
+	body > *,
+	body > header:not(:first-child) {
+		max-width: unset;
+	}
+	body > header {
+		order: unset;
+	}
+}

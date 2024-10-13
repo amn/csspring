@@ -1,0 +1,204 @@
+
+@font-face{
+   font-family: "Lilita";
+   src: url(LilitaOne-Regular.ttf);
+
+}
+:any-link {
+	color: var(--accent-color);
+}
+html {
+	--accent-color: rgb(31, 35, 39);
+	--background-color: hsl(0, 0%, 90%);
+	--background-color: rgb(212, 212, 222);
+	--text-color: black;
+	--alternative-text-color: pink;/*white;*/
+	background: var(--background-color);
+	color: var(--text-color);
+	letter-spacing: .05em;
+
+}
+body {
+	text-align: center;
+	font-family: "Lilita";
+	margin: 0;
+}
+button, input {
+	all: initial;
+	padding: 0.25em 0.5em;
+	font: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-transform: uppercase;
+	color: white;
+}
+
+h1{
+	font-size: 1.2em;
+}
+
+h3{
+	font-size: 1em;
+}
+
+img, iframe {
+	max-width: 100%;
+}
+
+img {
+	height: auto;
+}
+
+
+@keyframes float {
+	0% {
+		transform: translatey(0px);
+	}
+	50% {
+		transform: translatey(+15px);
+	}
+	100% {
+		transform: translatey(0px);
+	}
+}
+
+.logo {
+ display: block;
+ margin: auto;
+ border-radius: 50%;
+ height: auto;
+ margin: auto;
+ overflow: hidden;
+ animation: float 6s ease-in-out infinite;
+ img { width: 100%; height: auto; }
+}
+
+.banner, .screenshot {
+	width: 100%;
+}
+
+
+input:not([type]), input[type=text], input[type=email] {
+	font-size: 2em;
+	background: var(--alternative-text-color);
+	color: var(--text-color);
+	font-family: arial;
+	font-size: 1.2em;
+}
+
+input[type=button], input[type=submit], button {
+	margin: 0.75em 0em 0.75em 0em;
+	font-size: 2em;
+	/*background: var(--text-color);*/
+	
+	color: white;
+	cursor: pointer;
+	background:  rgb(227, 118, 149);
+}
+
+#mce-EMAIL
+{
+	max-width: 100%;
+	box-sizing: border-box;
+	background: white;
+
+}
+body > header{
+	 background-image: url(dark_cover.jpg);	
+     padding: 1em;
+     background-size: cover;
+}
+.games-gallery {
+    display: flex;
+    justify-content: safe center;
+    flex-wrap: wrap;
+    gap: 2em;
+    margin: 2em;
+
+}
+.games {
+    text-align: center;
+    text-transform: uppercase;
+
+}
+.games > a:first-child > img {
+    width: 17em;
+     /*border-radius: 50%;*/
+}
+
+
+body > .story > img.screenshot {
+	object-fit: cover;
+	max-width: 100%;
+	height: auto;
+}
+
+
+
+#steam-widget { 
+	height: 12em; 
+	width: 75%;
+	border: none;
+}
+
+body > article {
+	margin-block: 1em;
+}
+
+
+#mc_embed_signup {
+	background: var(--accent-color);
+	color: var(--alternative-text-color);
+	margin: auto;
+	padding: 0.25em 1em;
+	width: 100%;
+	box-sizing: border-box;
+}
+#title-text {
+	margin-block-end: 0;
+	margin-block-start: 2em;
+}
+
+
+/*#mc-embedded-subscribe-form input {
+	max-width: 100%;
+	box-sizing: border-box;
+}
+#mc-embedded-subscribe-form .note small {
+	all: unset;
+}
+#mc-embedded-subscribe-form [name="b_8dc478765ff45bcd403eacd19_cabdbec384"] {
+	display: none;
+}*/
+#social-media-buttons-paragraph > a {
+	display: inline-block;
+	text-align: center;
+}
+#social-media-buttons-paragraph > a:before {
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	content: '';
+	display: block;
+	width: 4em;
+	height: 4em;
+}
+#social-media-buttons-paragraph > a.twitter:before {
+	background-image: url(twitter.png);
+}
+#social-media-buttons-paragraph > a.facebook:before {
+	background-image: url(facebook.png);
+}
+#social-media-buttons-paragraph > a.instagram:before {
+	background-image: url(instagram.png);	
+}
+#social-media-buttons-paragraph > a.email:before {
+	background-image: url(email.png);	
+}
+#social-media-buttons-paragraph > a.discord:before {
+	background-image: url(discord.png);	
+}
+#copyright{
+font-size: .65em;	
+}

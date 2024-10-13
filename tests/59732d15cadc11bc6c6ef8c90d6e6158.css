@@ -1,0 +1,173 @@
+@font-face {
+	font-family: "Gogono Cocoa Mochi";
+	src: url(gomarice_gogono_cocoa_mochi.ttf) format("truetype");
+}
+:link {
+	color: var(--accent-color);
+}
+html {
+	--accent-color: rgb(227, 118, 149);
+	--background-color: hsl(0, 0%, 90%);
+	--text-color: black;
+	--alternative-text-color: white;
+	background: var(--background-color);
+	color: var(--text-color);
+	font-family: sans-serif;
+}
+body {
+	text-align: center;
+}
+button, input {
+	all: initial;
+	padding: 0.25em 0.5em;
+	font: inherit;
+}
+h1, h2, h3, h4, h5, h6 {
+	text-transform: uppercase;
+}
+input:not([type]), input[type=text], input[type=email] {
+	font-size: 2em;
+	background: var(--alternative-text-color);
+	color: var(--text-color);
+}
+input[type=button], input[type=submit], button {
+	margin: 0.75em 0em 0.75em 0em;
+	font-size: 2em;
+	background: var(--text-color);
+	color: var(--alternative-text-color);
+	cursor: pointer;
+}
+
+#mce-EMAIL
+{
+	max-width: 100%;
+	box-sizing: border-box;
+}
+script {
+	display: revert;
+}
+body > header,
+body > footer,
+#social-media-buttons-paragraph {
+	display: block;
+	margin: auto;
+}
+body > header > img {
+	max-width: 85vw;
+	max-height: 65vh;
+	object-fit: contain;
+}
+body > header > h1 {
+	/*font-family: "Gogono Cocoa Mochi";*/
+/*font-family: "Digitalt";*/
+}
+body > header > h1 + p {/*} img + h1 + p {*/
+	font-size: 1.5em;
+	margin: auto;
+	max-width: 30em;
+}
+body > .story {
+	display: inline-block;
+	margin: 2em;
+	/* outline: 1px dotted rgba(255, 255, 255, 0.5); */
+}
+
+body > .story > img.screenshot {
+	object-fit: cover;
+	max-width: 100%;
+	height: auto;
+}
+
+body > .story > img.screenshot + p {
+	background: var(--text-color);
+	color: var(--alternative-text-color);
+	/* box-shadow: 0 0.5em 0.25em rgba(0, 0, 0, 0.25); */
+	display: inline-block;
+	text-align: left;
+	max-width: 20em;
+	padding: 1em;
+	z-index: 2;
+	margin: 0;
+}
+body > .youtube {
+	max-width: 50%;
+	height: 200%;
+}
+
+#steam-widget { 
+	height: 12em; 
+}
+
+
+
+#youtube-widget { 
+	height: 32em; 
+}
+/*body > .asteam > img.screenshot {
+	max-height: 20em;
+}*/
+
+body > .tshirts > img.screenshot {
+	max-height: 20em;
+}
+
+body > .first.story > img.screenshot {
+	max-height: 20em;
+}
+
+body > .second.story > img.screenshot {
+	max-height: 20em;
+}
+body > .forth.story > img.screenshot {
+	max-height: 20em;
+}
+
+body > .third.story > img.screenshot {
+	max-height: 20em;
+}
+
+#mc_embed_signup {
+	background: var(--accent-color);
+	color: var(--alternative-text-color);
+	margin: auto;
+	padding: 0.25em 1em;
+	width: 100%;
+	box-sizing: border-box;
+}
+/*#mc-embedded-subscribe-form input {
+	max-width: 100%;
+	box-sizing: border-box;
+}
+#mc-embedded-subscribe-form .note small {
+	all: unset;
+}
+#mc-embedded-subscribe-form [name="b_8dc478765ff45bcd403eacd19_cabdbec384"] {
+	display: none;
+}*/
+#social-media-buttons-paragraph > a {
+	display: inline-block;
+	text-align: center;
+	font-size: 0;
+	margin: 1 1rem;
+}
+#social-media-buttons-paragraph > a:before {
+	content: '';
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	display: block;
+	width: 4rem;
+	height: 5rem;
+}
+#social-media-buttons-paragraph > a.twitter:before {
+	background-image: url(twitter.png);
+}
+#social-media-buttons-paragraph > a.facebook:before {
+	background-image: url(facebook.png);
+}
+#social-media-buttons-paragraph > a.instagram:before {
+	background-image: url(instagram.png);	
+}
+#social-media-buttons-paragraph > a.email:before {
+	background-image: url(email.png);	
+}

@@ -1,0 +1,33 @@
+* {
+	all: unset;
+	line-height: 1;
+}
+button, input {
+	display: inline-block;
+}
+h1, h2, h3, h4, h5, h6 {
+	margin-block-start: 1rem;
+	margin-block-end: 1rem;
+	display: block;
+}
+input:not([type]), input[type="text"], input[type="search"] {
+	border-bottom: 0.2em solid black;
+	font-family: monospace;
+}
+:any-link {
+	cursor: pointer;
+	text-decoration: underline;
+}
+p {
+	margin-block-start: 0.5em;
+	margin-block-end: 0.5em;
+}
+ul {
+	display: block;
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	padding-inline-start: 1em;
+}
+li {
+	display: list-item;
+}

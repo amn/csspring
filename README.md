@@ -87,6 +87,28 @@ Another factor for choosing Python was the fact we couldn't find any _sufficient
 
 Ignoring the "css" part, "spring" in the name refers to my starting the project in [early] spring of [2024]. A Python package needs a name, _some_ name, from the get-go, and the name stuck. I pronounce it as *cs-spring*.
 
+## Testing & Development
+
+The project defines a form of testing of the library, utilizing [Mypy](http://mypy-lang.org) and [Pytest](http://pytest.org). Testing is encapsulated with the `tests` directory and relies on a set of optional project dependencies specified with the `pyproject.toml` file and installed with e.g. `pip`, below with repository directory as current working directory (CWD):
+
+```shell
+pip install .[tests]
+```
+
+The above will set up current Python environment for running of the tests by installing all packages supplemental to `csspring` (which is the subject of testing). Since the environment should pertain to specifically testing of `csspring`, it is advised to allocate a _dedicated_ environment for the procedure, using e.g. the "virtualenv" framework. At any rate, `pip` may rightfully warn you if there's no such current environment.
+
+With the testing environment set up, testing may be executed with the repository as current working directory:
+
+```shell
+mypy
+pytest
+```
+
+The first command performs static type checking, verifying so-called _type soundness_ of all of the code. The second command verifies the parser as it performs when invoked. Each is independent of the other and may be invoked in either order. Each is expected to return zero exit code to signify required passing of all tests. The commands should be executed for each snapshot of the contents of the repository before committing said snapshot, to maintain confidence in the library expressed through the test suite and to protect against regressions.
+
+> [!NOTE]
+> The test suite is not written to uncover e.g. breaking API changes —— tests may pass even if the library no longer conforms to an API of a specific version. For instance, testing of the parser currently merely checks whether all of input is consumed, which does not preclude the possibility of the _structure_ of the parse tree having changed in a manner which would constitute breaking changes in the API. Put another way: what tests there currently are, these were written towards checking the soundness of the CSS parsing behaviour and its conformance to the specification(s), not necessarily whether the [correct] results it vends, conform to a specific interfaces as expected by the developer. Implicitly, however, since testing of behaviour uses the interfaces, minimal soundness of these must be implied.
+
 ## References
 
 [^1]: http://github.com/w3c/csswg-drafts/issues/10119#issuecomment-2016156566

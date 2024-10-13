@@ -1,0 +1,52 @@
+body {
+	--dwb-red-color: #be0f34;
+	font-family: "Myriad Pro", sans-serif;
+}
+@font-face {
+	font-family: "Myriad Pro";
+	src: url("myriad-pro/MyriadPro-Regular.otf");
+}
+input, textarea {
+	font-size: unset;
+	font-family: monospace;
+}
+body > header > hgroup {
+	background: url(firewheel.svg), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><rect fill="white" width="20" height="20" /></svg>');
+	background-position-x: right 1em, right 0.5em;
+	background-position-y: top 0.5em, top;
+	background-repeat: no-repeat;
+	background-size: 5em, 6em;
+	box-sizing: border-box;
+	color: var(--dwb-red-color);
+	margin-inline-start: auto;
+	min-height: 6em;
+	padding-block-start: 1.5em;
+	text-transform: uppercase;
+}
+body > header > hgroup > * {
+	font-weight: normal;
+	margin: unset;
+	margin-inline-start: auto;
+	text-align: end;
+	width: max-content;
+}
+body > header > hgroup > h2 {
+	font-size: 1.75em;
+	margin-inline-end: 7rem;
+}
+body > header > hgroup > h3 {
+	background: white;
+	font-size: 1em;
+	margin-inline-end: 6rem;
+	padding-inline: 0.5rem 1rem;
+}
+body > header > hgroup::after {
+	background: var(--dwb-red-color);
+	content: "";
+	display: block;
+	height: 0.125em;
+	margin-block-start: -0.5em;
+	position: relative;
+	width: 100%;
+	z-index: -1;
+}

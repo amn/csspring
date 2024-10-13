@@ -1,0 +1,400 @@
+@import url(rb.css);
+
+body, html {
+	height: 100%;
+	overflow-y: hidden;
+	-webkit-tap-highlight-color: transparent; /** With this particular stylesheet, iOS highlights the _entire_ screen. This rule attempts to fix that. */
+}
+body {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	cursor: grab;
+}
+body:active {
+	cursor: grabbing;
+}
+body > div:first-child {
+	height: 100%;
+	overflow-y: hidden;
+	position: relative;
+}
+button {
+	all: unset;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 35%;
+	cursor: pointer;
+}
+button[hidden] {
+	display: none;
+}
+body > div > header,
+body > div > header.splash > h1 {
+	align-items: safe center;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	justify-content: safe center;
+	width: 100%;
+}
+body > div > header {
+	background-color: var(--brand-color);
+	background-image: url(ellipsis.svg);
+	background-position: bottom 0.625em center;
+	background-repeat: no-repeat;
+	background-size: auto 0.25em;
+	color: white;
+	padding: 1em;
+	padding-bottom: 1.5em;
+	position: relative;
+	text-align: center;
+	z-index: 2;
+}
+body > div > header > h1 {
+	background-image: url(logo-red-black-white.svg);
+	background-position: center;
+	background-repeat: no-repeat;
+}
+body > div > header.splash > h1 {
+	background-color: inherit;
+	background-size: auto 3em;
+	margin: 0;
+	left: 0;
+	top: 0;
+	position: fixed;
+	animation: fade-out 0.25s ease 2s both;
+	z-index: 3;
+}
+body > div > header:not(.splash) > h1 {
+	flex: none;
+	height: 2em;
+	width: 100%;
+}
+body > div > header > h1 > .text {
+	display: none;
+}
+#explain {
+	overflow: auto;
+}
+#explain > p {
+	max-width: 18em;
+}
+main {
+	display: flex;
+	flex-direction: column;
+	height: calc(100% - 1.5em);
+}
+main + footer {
+	align-items: center;
+	background-color: var(--brand-color);
+	background-image: url(ellipsis.svg);
+	background-position: top 0.625em center;
+	background-size: auto 0.25em;
+	background-repeat: no-repeat;
+	box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.4);
+	color: white;
+	display: flex;
+	flex: none;
+	flex-direction: column;
+	height: 100%;
+	justify-content: space-around;
+	padding: 1.5em 1em 1em 1em;
+	box-sizing: border-box;
+}
+main + footer a {
+	color: inherit;
+	text-decoration: none;
+}
+main + footer > img.logo {
+	flex: none;
+	width: 50%;
+	max-height: 5em;
+	margin: 0.5em;
+}
+main + footer > .message {
+	max-width: 18em;
+	min-width: 10em;
+	overflow-y: auto;
+	text-align: center;
+	width: 75%;
+}
+main + footer > .message p {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+main + footer > .message p:not(:last-child) {
+	margin-bottom: 1em;
+}
+main + footer > .share-links {
+	display: flex;
+}
+main + footer > .share-links > a > img {
+	height: auto;
+}
+main + footer .copyright {
+	line-height: 1;
+}
+body.results main {
+	height: 100%;
+}
+nav {
+	background-color: var(--brand-color);
+	box-shadow: 0 0 0.5em 0.1em rgba(0, 0, 0, 0.4);
+	color: white;
+	display: flex;
+	flex: none;
+	z-index: 1;
+	width: 100%;
+}
+nav > ul {
+	display: flex;
+	flex: 1 1 auto;
+	flex-wrap: wrap;
+	list-style: none;
+}
+nav > ul > li {
+	flex: 1 1 0;
+	display: flex;
+	min-height: 4em;
+}
+nav > ul > li.complete > a:after {
+	content: url(checkmark.svg);
+	width: 1em;
+	padding-left: 0.25em;
+}
+nav > ul > li > a {
+	align-items: center;
+	background-image: linear-gradient(to top, white, white);
+	background-position: bottom;
+	background-repeat: no-repeat;
+	background-size: 0;
+	box-sizing: border-box;
+	color: inherit;
+	display: flex;
+	flex: auto;
+	font-size: 80%;
+	justify-content: center;
+	line-height: 1;
+	min-width: 100%;
+	padding: 1em;
+	text-align: center;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+nav > ul > li[hidden] > a {
+	color: rgba(255, 255, 255, 0.5);
+}
+.pages {
+	display: flex;
+	flex: auto;
+	overflow-x: hidden;
+	position: relative;
+	width: 100%;
+}
+.pages > fieldset {
+	border: none;
+	min-width: 100%;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch; /** iOS only uses momentum-scrolling on top-level element, let us use it also here. */
+	padding: 1em;
+	box-sizing: border-box;
+}
+.pages > fieldset > legend {
+	display: none;
+}
+.pages > fieldset > .list-filtering {
+	display: flex;
+	margin: 1em auto;
+	max-width: 15em;
+}
+.pages > fieldset > .list-filtering > label {
+	display: inline-block;
+	flex: auto;
+	padding-left: 2em;
+	background-image: url(looking-glass.svg);
+	background-position: .1em .5em;
+	background-size: 1.3em;
+	background-repeat: no-repeat;
+	margin: 0;
+}
+
+.pages > fieldset > .list-filtering > label > input {
+	width: 100%;
+}
+
+.pages > fieldset > .list-filtering > label + .clear[type=button] {
+	background-image: url(cross.svg);
+	flex: none;
+	font-size: 0;
+	height: 2rem;
+	width: 2rem;
+	background-size: 0.8rem;
+}
+
+.pages > fieldset::-webkit-scrollbar {
+	display: none;
+}
+.hier-menu { margin: 1em auto; max-width: 20em; }
+.hier-menu.filtered, .hier-menu li.filtered {
+	display: none;
+}
+.hier-menu, .hier-menu ul { list-style: none; }
+.hier-menu li { position: relative; }
+.hier-menu li > .group-title { padding: 0.8em 0; font-weight: 600; border-bottom: 0.05em solid black; cursor: pointer;
+	background-image: url(downwards-arrow.svg);
+	background-position: right 0.5em center;
+	background-repeat: no-repeat;
+	background-size: 1em;
+	padding-right: 2em;
+}
+.hier-menu li.locked-down > .group-title {
+	background-image: url(lock.svg);
+	color: #cccccc;
+	cursor: initial;
+	font-weight: initial;
+}
+.hier-menu li.expanded > .group-title {
+	background-image: url(upwards-arrow.svg);
+}
+.hier-menu li > .group-title + ul {
+	display: none;
+	height: 0;
+	overflow: hidden;
+}
+.hier-menu + div:not([hidden]) {
+	display: flex;
+	flex-direction: column;
+	height: calc(100% - 3.7em);
+	justify-content: center;
+	align-items: center;
+	color: #808080;
+}
+.hier-menu li > label { margin: 0; padding: 0; }
+.hier-menu li > label > input[type=radio] { display: none; }
+.hier-menu li > label > input[type=radio] + span { margin: 0; padding: 0.8em; cursor: pointer; box-sizing: border-box; height: 100%; display: block; border-bottom: 0.05em solid black; color: black; }
+.hier-menu li > label > input[type=radio]:disabled + span { cursor: default; color: rgba(0, 0, 0, 0.25); }
+.hier-menu li > label > input[type=radio]:checked + span { color: white; background-color: var(--brand-color); border-color: transparent; }
+.hier-menu li > label > input[hidden] + span { display: none; }
+ul.options-list > li {
+	display: flex;
+}
+ul.options-list > li > label {
+	flex: auto;
+}
+ul.options-list > li > button.clear {
+	background-color: var(--brand-color);
+	background-image: url(cross-inverted.svg);
+	background-size: 0.8rem;
+	flex: none;
+	font-size: 0;
+	min-width: 2rem;
+	min-height: 2rem;
+}
+#logo { max-height: 6em; max-width: 80%; margin: 2em auto; display: block; }
+#results-fieldset {
+	position: relative;
+	overflow: unset;
+}
+#results-fieldset > div {
+	flex-direction: column;
+	justify-content: center;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	position: absolute;
+	top: 0;
+}
+#results-fieldset > div:not([hidden]) {
+	display: flex;
+}
+#results-fieldset > .please-wait {
+	align-items: center;
+}
+#results-fieldset > .please-wait > span {
+	font-size: 0;
+}
+#results-fieldset > .please-wait > span::before {
+	content: url(rotating-crescent.svg);
+	display: block;
+	height: 3rem;
+	width: 3rem;
+}
+#results > div:first-child {
+	flex: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+}
+#results > div:nth-child(2) {
+	align-items: center;
+	display: flex;
+	flex: none;
+	justify-content: space-between;
+	margin: 1em;
+	margin-top: 0;
+}
+#results output {
+	color: var(--brand-color);
+	display: block;
+	font-size: 3em;
+	line-height: 1;
+	margin: 2.5vh 0;
+	text-transform: uppercase;
+}
+#results .teams {
+	align-items: center;
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+	margin: 0 10%;
+}
+#results .teams > .name {
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	padding: 0 0.5em;
+}
+#results .teams > small {
+	font-size: inherit;
+	padding: 0 0.5em;
+}
+#results .date, #results .teams {
+	font-size: 1.25em;
+}
+#results > .share-links {
+	flex: none;
+	margin: 1em;
+	margin-top: 0;
+}
+#results .share-links > a > svg {
+	height: 100%;
+	width: 100%;
+}
+.share-links > a {
+	width: 3em;
+	height: 3em;
+	padding: 0.5em;
+	display: inline-block;
+	text-decoration: none;
+}
+#results [type="reset"] {
+	background-image: url(reset.svg);
+	background-size: 80%;
+	font-size: 0;
+	height: 3rem;
+	width: 3rem;
+}
+@keyframes fade-out {
+	to {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
+@media (min-height: 30em) {
+	#results .teams {
+		flex-direction: column;
+	}
+}
