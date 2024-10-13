@@ -111,7 +111,7 @@ class TokenProduction(Production):
     """Class of productions that express a token, optionally one with a matching set of attributes.
     """
     type: type[Token]
-    attributes: Mapping
+    attributes: Mapping[str, Any]
     def __init__(self, type: builtins.type[Token], **attributes: Any):
         """
         :param type: The type of token this production will express
@@ -145,7 +145,7 @@ class Formatter:
             case ReferenceProduction() | TokenProduction(): return False
             case _:
                 raise ValueError
-    def combined(self, productions: Iterable, combinator: str) -> Iterable[str]:
+    def combined(self, productions: Iterable[Production], combinator: str) -> Iterable[str]:
         it = (self.format(production) for production in productions)
         yield from next(it)
         for item in it:

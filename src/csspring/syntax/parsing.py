@@ -510,7 +510,7 @@ def normalize_input(input: NormalizeInput) -> Input:
     if isinstance(input, Input):
         return input
     try:
-        input = iter(cast(Iterable, input))
+        input = iter(cast(Iterable[Any], input))
     except TypeError:
         assert not isinstance(input, Iterable) # Communicate to the type checker that `input` is not iterable
     else:
@@ -547,7 +547,7 @@ def source(element: Product | Token) -> str:
     """
     return element.source if hasattr(element, 'source') else ''.join(source(item) for item in element)
 
-def tokens(product: Iterable | Token) -> Iterator[Token]:
+def tokens(product: Product | Token) -> Iterator[Token]:
     """
     Yield every token contained in a parser production.
 
