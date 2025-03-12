@@ -7,6 +7,16 @@ name = "csspring"
 authors= [
     { name = "Armen Michaeli", email = "armen@armen.michaeli.name" },
 ]
+classifiers =   [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Text Processing"
+]
 description = "A CSS parsing library"
 dynamic = [ "version" ]
 license = { file = "LICENSE.txt" }
