@@ -34,7 +34,7 @@ def intersperse(*items: T, separator: T) -> Iterable[T]:
 @runtime_checkable
 class Reader(Protocol[T_co]):
     """An interface to readable/readers, to assist type checking for the most part."""
-    def read(self, size: int = -1, /) -> Sequence[T_co]:
+    def read(self, size: int | None = -1, /) -> Sequence[T_co]:
         """See Python's own `IOBase.read` in the `io` module."""
         raise NotImplementedError
 
@@ -78,17 +78,17 @@ class BufferedPeekingReader(PeekingUnreadingReader[T]):
     def __init__(self, source: Reader[T]):
         self._source = source
         self._buffer = []
-    def peek(self, size: int, /) -> Sequence[T]:
-        assert size >= 0 # Reading with negative sizes is defined by `read` defined by Python, but not implemented yet for this class (that would call for a more elaborate implementation, while the reader is never used with negative values)
+    def peek(self, size: int | None, /) -> Sequence[T]:
+        assert size is not None and size >= 0 # Reading with negative sizes is defined by `read` defined by Python, but not implemented yet for this class (that would call for a more elaborate implementation, while the reader is never used with negative values)
         r = size - len(self._buffer)
         if r > 0:
             self._buffer += [*self._source.read(r)]
         return self._buffer[:size]
-    def read(self, size: int = -1, /) -> Sequence[T]:
+    def read(self, size: int | None = -1, /) -> Sequence[T]:
         elements = self.peek(size)
         del self._buffer[:size]
         return elements
-    def unread(self, items) -> None:
+    def unread(self, items: Iterable[T]) -> None:
         self._buffer[:0] = items
 
 def public_attrs(obj: object) -> Iterable[str]:
@@ -112,7 +112,7 @@ def qualified_type_name(cls: type) -> str:
     """A stable (no reliance on "dunder" property) means to obtain the qualified name for a type."""
     return cls.__qualname__
 
-def setattrs(obj: object, **kwargs) -> None:
+def setattrs(obj: object, **kwargs: Any) -> None:
     """Set multiple attributes on an object."""
     for attr in kwargs.items():
         setattr(obj, *attr)
@@ -127,7 +127,7 @@ class IteratorReader(Reader[T]):
     _source: Iterator[T]
     def __init__(self, source: Iterator[T]):
         self._source = source
-    def read(self, /, size=-1) -> Sequence[T]:
+    def read(self, /, size: int | None = -1) -> Sequence[T]:
         result: list[T] = []
         while len(result) != size:
             try:

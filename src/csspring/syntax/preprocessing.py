@@ -3,6 +3,7 @@
 from ..utils import CP, is_surrogate_code_point
 
 from collections.abc import Callable, Iterator
+from typing import Any
 
 class FilteredCodePoint(CP):
     """Class of code point derivatives that reference the original (unfiltered) code point sequence.
@@ -12,7 +13,7 @@ class FilteredCodePoint(CP):
     Said representation facilitates recovery of original text from a sequence of filtered code points, and by indirection, from token(s).
     """
     source: CP
-    def __new__(cls, *args, source: CP, **kwargs):
+    def __new__(cls, *args: Any, source: CP, **kwargs: Any) -> 'FilteredCodePoint':
         """Most native primitive types, including `str`, cannot be effectively extended in traditional manner -- by invoking `super` in the subclass constructor -- `__new__` must be overriden instead to yield the object of appropriate type because the super-class does not feature a constructor and objects of the class are constructed with e.g. `str.__new__`.
         """
         obj = super().__new__(cls, *args, **kwargs)
