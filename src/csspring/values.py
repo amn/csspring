@@ -1,6 +1,6 @@
 """Implement the ["CSS Values and Units Module Level 4"](http://drafts.csswg.org/css-values-4) specification.
 
-Only parts currently in use by the rest of the `csspring` pcakge, are implemented.
+Only parts currently in use by the rest of the `csspring` package, are implemented.
 """
 from .syntax.tokenizing import Token, token_value, CommaToken, CommentToken, WhitespaceToken
 
