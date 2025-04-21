@@ -26,7 +26,8 @@ from .test_parser import css_file_path, parse_file_at, valid_css_file_name_stems
     'foo[ bar ]',
     'foo[bar=baz]'
     'foo[bar= baz ]'
-    'foo[bar= "baz" ]'
+    'foo[bar= "baz" ]',
+    ':is(:is(foo))'
     ))
 def test_selector_parsing(text: str) -> None:
     """Test whether the text recovered from the product of parsing given text (as a selector [list]) equals given text.

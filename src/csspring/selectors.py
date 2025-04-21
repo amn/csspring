@@ -8,7 +8,7 @@ NOTE: Although it's being referred to as parsing [of] a "selector" (singular), t
 """
 
 from .syntax.parsing import Input as TokenStream, Product, tokens # Conveniently reusing some of the helpful constructs offered by the [CSS] syntax-level parsing module
-from .syntax.tokenizing import Token, BadStringToken, BadURLToken, CloseBraceToken, CloseBracketToken, CloseParenToken, ColonToken, DelimToken, FunctionToken, HashToken, IdentToken, OpenBraceToken, OpenBracketToken, OpenParenToken, StringToken
+from .syntax.tokenizing import Token, token_value, BadStringToken, BadURLToken, CloseBraceToken, CloseBracketToken, CloseParenToken, ColonToken, DelimToken, FunctionToken, HashToken, IdentToken, OpenBraceToken, OpenBracketToken, OpenParenToken, StringToken
 
 from .syntax.grammar import any_value
 from .values import Production, AlternativesProduction, CommaSeparatedRepetitionProduction, ConcatenationProduction, NonEmptyProduction, OptionalProduction, ReferenceProduction, RepetitionProduction, TokenProduction, OWS
@@ -56,6 +56,9 @@ def parse_any_value(input: TokenStream) -> Product | None:
                 break
             case OpenParenToken() | OpenBracketToken() | OpenBraceToken():
                 count[type(token)] += 1
+            case FunctionToken():
+                assert token.source[-1] == token_value(OpenParenToken)
+                count[OpenParenToken] += 1
             case CloseParenToken() | CloseBracketToken() | CloseBraceToken():
                 if count[token.mirror_type] == 0:
                     break
